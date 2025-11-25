@@ -1,12 +1,22 @@
 package ch.heigvd.iict.daa.labo5
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ImageAdapter
+    private val imageCount = 10_000 // nbr of images to display
+    private val colCount = 3 // nbr of columns in the grid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +38,41 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // TODO ...
+        setupRecyclerView()
+    }
 
+    private fun setupRecyclerView() {
+        recyclerView = findViewById(R.id.main_recycler_view)
+        recyclerView.layoutManager = GridLayoutManager(this, colCount)
+
+        val imageIds = (1..imageCount).toList()
+        adapter = ImageAdapter(
+            imageIds = imageIds,
+            cacheDir = cacheDir,
+            scope = lifecycleScope
+        )
+        recyclerView.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // inflate the menu
+        // this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_clear_cache -> {
+                clearCache()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun clearCache() {
+        // TODO: Step 4
     }
 
 }
