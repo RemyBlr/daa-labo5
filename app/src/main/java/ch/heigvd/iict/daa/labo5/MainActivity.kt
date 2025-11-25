@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -14,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImageAdapter
-    private val imageCount = 100 // nbr of images to display
+    private val imageCount = 10_000 // nbr of images to display
     private val colCount = 3 // nbr of columns in the grid
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +46,11 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, colCount)
 
         val imageIds = (1..imageCount).toList()
-        adapter = ImageAdapter(imageIds)
+        adapter = ImageAdapter(
+            imageIds = imageIds,
+            cacheDir = cacheDir,
+            scope = lifecycleScope
+        )
         recyclerView.adapter = adapter
     }
 
